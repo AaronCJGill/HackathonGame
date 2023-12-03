@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class scene : MonoBehaviour
 {
-    public int xCoordinateInitial;
-    public int yCoordinateInitial;
+    public float xCoordinateInitial;
+    public float yCoordinateInitial;
+
+    public void Start()
+    {
+        xCoordinateInitial = transform.position.x;
+        yCoordinateInitial = transform.position.y;
+    }
 }
