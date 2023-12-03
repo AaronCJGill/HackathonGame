@@ -15,6 +15,7 @@ public class answerButton : MonoBehaviour
     {
         if (isSelected == false) // select this{}
         {
+            mom.GetComponent<questions>().answerSelect();
             //change the image of the button
             self.transform.GetChild(0).GetComponent<TMP_Text>().text = "X";
             //change the selected answer from the question script

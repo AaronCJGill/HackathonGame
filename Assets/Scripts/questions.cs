@@ -24,7 +24,7 @@ public class questions : MonoBehaviour
             self.transform.GetChild(i+1).transform.GetChild(1).GetComponent<TMP_Text>().text = answerStrings[i];
         }
         //change the size so it fits
-        self.GetComponent<RectTransform>().sizeDelta = new Vector2(580, 450);
+        self.GetComponent<RectTransform>().sizeDelta = new Vector2(880, 480);
 
         if (img)
         {
@@ -39,6 +39,13 @@ public class questions : MonoBehaviour
 
     public void answerSelect()
     {
-
+        for (int i = 0; i < 3; i++) // see if theres already and answer thats been selected
+        {
+            if (self.transform.GetChild(i + 1).transform.GetChild(0).GetComponent<answerButton>().isSelected == true)
+            {
+                self.transform.GetChild(i + 1).transform.GetChild(0).GetComponent<answerButton>().transform.GetChild(0).GetComponent<TMP_Text>().text = "";
+                self.transform.GetChild(i + 1).transform.GetChild(0).GetComponent<answerButton>().isSelected = false;
+            }
+        }
     }
 }
