@@ -26,15 +26,15 @@ public class questions : MonoBehaviour
         //change the size so it fits
         self.GetComponent<RectTransform>().sizeDelta = new Vector2(880, 480);
 
-        if (img)
-        {
-            image.SetActive(true);
-            image.GetComponent<Image>().sprite = img;
-            //hopefully this works, pray to god
-            image.GetComponent<Image>().rectTransform.sizeDelta =
-                    new Vector2(200,
-                    260 * img.bounds.size.y / img.bounds.size.x);
-        }
+        //if (img)
+        //{
+        //    image.SetActive(true);
+        //    image.GetComponent<Image>().sprite = img;
+        //    //hopefully this works, pray to god
+        //    image.GetComponent<Image>().rectTransform.sizeDelta =
+        //            new Vector2(200,
+        //            260 * img.bounds.size.y / img.bounds.size.x);
+        //}
     }
 
     public void answerSelect()

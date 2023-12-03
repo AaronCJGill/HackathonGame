@@ -140,6 +140,8 @@ public class GameManager : MonoBehaviour
     public GameObject content;
     public int score;
     public int totalScore;
+
+    public GameObject EndScene;
     public void GameEnd()
     {
         //calculate the score
@@ -150,5 +152,7 @@ public class GameManager : MonoBehaviour
                 score++;
         }
 
+        EndScene.SetActive(true);
+        EndScene.transform.GetChild(1).GetComponent<TMP_Text>().text += score + "/" + totalScore;
     }
 }
