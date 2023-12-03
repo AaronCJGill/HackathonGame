@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Wolfram.UnityLink;
+//using Wolfram.UnityLink;
 
 public class GameTimer : MonoBehaviour
 {
