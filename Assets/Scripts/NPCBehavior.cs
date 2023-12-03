@@ -5,6 +5,8 @@ public class NPCBehavior : MonoBehaviour
 {
     AudioSource audioSource;
     Transform startPos, endPos;
+    [SerializeField]
+    bool isDog = false;
 
     public enum activeScreen
     {
@@ -75,7 +77,7 @@ public class NPCBehavior : MonoBehaviour
         currentAction = actions.handsy;
         yield return new WaitForSeconds(seconds/3);
         //lose game
-        //GameManager.instance.gameEnd();
+        GameManager.instance.GameEnd();
 
     }
 
@@ -145,11 +147,26 @@ public class NPCBehavior : MonoBehaviour
     void growBigger()
     {
         //grows self bigger when breathing
-        transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+        if (isDog)
+        {
+            transform.localScale = new Vector3(200,200,1);
+        }
+        else
+        {
+            transform.localScale = new Vector3(200, 200, 1);
+        }
     }
     void shrinkSmaller()
     {
-        transform.localScale = Vector3.one;
+
+        if (isDog)
+        {
+            transform.localScale = new Vector3(108, 108, 1);
+        }
+        else
+        {
+            transform.localScale = new Vector3(108, 108, 1);
+        }
     }
 
 }

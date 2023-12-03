@@ -33,6 +33,11 @@ public class GameManager : MonoBehaviour
     public List<Sprite> passwordSprites = new List<Sprite>();
     public int passwordListIndex;
 
+    [SerializeField]
+    private GameObject playerSlapObj;
+    [SerializeField]
+    public Transform playerSlapParent;
+
     void Start()
     {
         mainXCoordinate = scenesInGame[0].GetComponent<scene>().xCoordinateInitial;
@@ -155,4 +160,11 @@ public class GameManager : MonoBehaviour
         EndScene.SetActive(true);
         EndScene.transform.GetChild(1).GetComponent<TMP_Text>().text += score + "/" + totalScore;
     }
+
+    public void playerSlap()
+    {
+        Instantiate(playerSlapObj, playerSlapParent);
+    }
+
+
 }
