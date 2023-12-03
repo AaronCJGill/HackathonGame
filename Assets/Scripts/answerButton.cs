@@ -19,6 +19,7 @@ public class answerButton : MonoBehaviour
             self.transform.GetChild(0).GetComponent<TMP_Text>().text = "X";
             //change the selected answer from the question script
             mom.GetComponent<questions>().answerSelect();
+            isSelected = true;
         }
         else
         {
@@ -26,6 +27,7 @@ public class answerButton : MonoBehaviour
             self.transform.GetChild(0).GetComponent<TMP_Text>().text = "";
             //change the selected answer from the question script
             mom.GetComponent<questions>().answerSelected = answer.none;
+            isSelected = false;
         }
     }
 }
