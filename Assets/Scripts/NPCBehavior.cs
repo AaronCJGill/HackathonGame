@@ -31,6 +31,7 @@ public class NPCBehavior : MonoBehaviour
     Transform handStartPos;
     [SerializeField]
     Transform handEndPos;
+    bool handTouched = false;
 
     private void Awake()
     {
@@ -40,7 +41,7 @@ public class NPCBehavior : MonoBehaviour
     {
         float x = Random.Range(1, 3);//10/15 to start off
         //Debug.Log(x);
-        StartCoroutine(TakePhoneRoutine(30));
+        StartCoroutine(TakePhoneRoutine(12));
     }
     private void Update()
     {
@@ -58,6 +59,7 @@ public class NPCBehavior : MonoBehaviour
 
     IEnumerator TakePhoneRoutine(float seconds)
     {
+        handTouched = false;
         Debug.Log("TakePhone Called" + seconds + "  " + (seconds / 3));
         yield return new WaitForSeconds(seconds/3);
         Debug.Log("breathing - grow bigger");
@@ -88,6 +90,7 @@ public class NPCBehavior : MonoBehaviour
         StopCoroutine(TakePhoneRoutine(40));
         Debug.Log("HandMoveCoroutine Stopped - moveaway triggered - behavior reset");
         StartCoroutine(moveHandBackBehavior(3f));
+        handTouched = true;
         yield return new WaitForSeconds(1f);
         //react 
         //move back to normal position
@@ -106,18 +109,21 @@ public class NPCBehavior : MonoBehaviour
     }
     IEnumerator handMoveBehavior(float t)
     {
-        Debug.Log("Starting Hand Move Behavior");
-        float changePos = hand.transform.position.x;
-        float timeElapsed = 0;
-        while (timeElapsed < t)
-        {
-            changePos = EasingFunction.EaseInOutSine( handStartPos.position.x, handEndPos.position.x, timeElapsed / t);//Mathf.Lerp(startValue, endValue, timeElapsed / lerpDuration);
-            hand.transform.position = new Vector3(changePos, handEndPos.position.y, 0);
-            timeElapsed += Time.deltaTime;
-            yield return null;
-        }
-        hand.transform.position = handEndPos.position;
-        Debug.Log("HandMoveComplete");
+
+            //Debug.Log("Starting Hand Move Behavior");
+            float changePos = hand.transform.position.x;
+            float timeElapsed = 0;
+            while (timeElapsed < t)
+            {
+                changePos = EasingFunction.EaseInOutSine(handStartPos.position.x, handEndPos.position.x, timeElapsed / t);//Mathf.Lerp(startValue, endValue, timeElapsed / lerpDuration);
+                hand.transform.position = new Vector3(changePos, handEndPos.position.y, 0);
+                timeElapsed += Time.deltaTime;
+                yield return null;
+            }
+            hand.transform.position = handEndPos.position;
+            //Debug.Log("HandMoveComplete");
+        
+        
     }
     IEnumerator moveHandBackBehavior(float t)
     {
@@ -131,7 +137,7 @@ public class NPCBehavior : MonoBehaviour
             timeElapsed += Time.deltaTime;
             yield return null;
         }
-        hand.transform.position = handEndPos.position;
+        hand.transform.position = handStartPos.position;
     }
 
 
