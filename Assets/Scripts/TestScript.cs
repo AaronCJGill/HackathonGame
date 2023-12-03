@@ -11,7 +11,7 @@ public class TestScript : MonoBehaviour
     void Start()
     {
         
-        string res = (string) wl.CloudEvaluate(s);
+        //string res = (string) wl.CloudEvaluate(s);
     }
 
     // Update is called once per frame

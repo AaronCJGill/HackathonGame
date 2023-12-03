@@ -22,12 +22,13 @@ public class GameManager : MonoBehaviour
     public float mainXCoordinate;
     public float mainYCoordinate;
 
+    public NPCBehavior.activeScreen activeScreen = NPCBehavior.activeScreen.down;
+
     void Start()
     {
         mainXCoordinate = scenesInGame[0].GetComponent<scene>().xCoordinateInitial;
         mainYCoordinate = scenesInGame[0].GetComponent<scene>().yCoordinateInitial;
     }
-
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.W))
@@ -64,14 +65,17 @@ public class GameManager : MonoBehaviour
         if (chr == 'w')
         {
             currentSeneToChange = scenesInGame[1];
+            activeScreen = NPCBehavior.activeScreen.up;
         }
         else if (chr == 'a')
         {
             currentSeneToChange = scenesInGame[2];
+            activeScreen = NPCBehavior.activeScreen.left;
         }
         else if (chr == 'd')
         {
             currentSeneToChange = scenesInGame[3];
+            activeScreen = NPCBehavior.activeScreen.right;
         }
         //debugging
         if (chr == 'd')
@@ -102,5 +106,8 @@ public class GameManager : MonoBehaviour
         currentSeneToChange.transform.position =
             new Vector2(currentSeneToChange.GetComponent<scene>().xCoordinateInitial,
             currentSeneToChange.GetComponent<scene>().yCoordinateInitial);
+
+        //reset activeScreen
+        activeScreen = NPCBehavior.activeScreen.down;
     }
 }

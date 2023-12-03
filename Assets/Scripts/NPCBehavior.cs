@@ -23,8 +23,8 @@ public class NPCBehavior : MonoBehaviour
 
     [SerializeField]//the screen this is set to
     activeScreen currentScreen;
-
-
+    [SerializeField]
+    GameObject hand;
 
 
     private void Awake()
@@ -36,7 +36,7 @@ public class NPCBehavior : MonoBehaviour
     {
         //if player is looking at this screen
         //if they are, and the phone is paused, then reset back to normal
-        if (true)
+        if (GameManager.instance.activeScreen == currentScreen)
         {
 
         }
@@ -48,7 +48,7 @@ public class NPCBehavior : MonoBehaviour
         yield return new WaitForSeconds(seconds/2);
         //wait a certain amount of time and then play heavy breathing
         //play Heavy breathing
-
+        audioSource.Play();
         yield return new WaitForSeconds(seconds/2);
 
             
@@ -60,13 +60,24 @@ public class NPCBehavior : MonoBehaviour
         StopCoroutine(TakePhoneRoutine(40));
         yield return new WaitForSeconds(1f);
         //react 
+        //move back to normal position
 
+        //move hand away if on screen
         //stop heavy breathing
 
 
         //start new routine
         float sec = Random.Range(15,40);
         StartCoroutine(TakePhoneRoutine(sec));
+
+    }
+
+    void growBigger()
+    {
+
+    }
+    void shrinkSmaller()
+    {
 
     }
 
