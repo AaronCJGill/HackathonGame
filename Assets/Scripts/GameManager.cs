@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -23,6 +26,12 @@ public class GameManager : MonoBehaviour
     public float mainYCoordinate;
 
     public NPCBehavior.activeScreen activeScreen = NPCBehavior.activeScreen.down;
+
+    public string Password;
+    public int correctPassword = 5234;
+    public GameObject passwordImage;
+    public List<Sprite> passwordSprites = new List<Sprite>();
+    public int passwordListIndex;
 
     void Start()
     {
@@ -109,5 +118,37 @@ public class GameManager : MonoBehaviour
 
         //reset activeScreen
         activeScreen = NPCBehavior.activeScreen.down;
+    }
+
+    public GameObject trivia;
+    public GameObject opneScreen;
+    public void CheckPassword()
+    {
+        passwordImage.GetComponent<Image>().sprite = passwordSprites[passwordListIndex];
+        if (correctPassword == Convert.ToInt32(Password))
+        {
+            trivia.SetActive(true);
+            opneScreen.SetActive(false);
+        }
+        else
+        {
+            //play sound
+        }
+        Password = "";
+    }
+
+    public GameObject content;
+    public int score;
+    public int totalScore;
+    public void GameEnd()
+    {
+        //calculate the score
+        totalScore = content.transform.childCount;
+        for (int i = 0; i < totalScore; i++)
+        {
+            if (content.transform.GetChild(i).GetComponent<questions>().answerSelected == content.transform.GetChild(i).GetComponent<questions>().correctAnswer)
+                score++;
+        }
+
     }
 }

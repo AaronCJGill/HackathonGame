@@ -25,6 +25,7 @@ public class phoneScreenButton : MonoBehaviour
             startScreen.SetActive(false);
             blank.SetActive(true);
             phoneOpen = false;
+            GameManager.instance.Password = "";
         }
         else
         {
