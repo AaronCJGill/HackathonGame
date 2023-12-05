@@ -19,6 +19,7 @@ public class HandScript : MonoBehaviour, IPointerClickHandler
     private void recoilHand()
     {
         parentNPC.triggered();
+        parentNPC.handTouched = false;
         GameManager.instance.playerSlap();
     }
 }

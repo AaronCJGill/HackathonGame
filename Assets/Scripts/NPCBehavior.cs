@@ -33,7 +33,14 @@ public class NPCBehavior : MonoBehaviour
     Transform handStartPos;
     [SerializeField]
     Transform handEndPos;
-    bool handTouched = false;
+    public bool handTouched = true;
+
+    public bool gameover = false;
+
+
+
+    IEnumerator goToPlayerRoutine = null;
+    IEnumerator HandRoutine = null;
 
     private void Awake()
     {
@@ -41,13 +48,20 @@ public class NPCBehavior : MonoBehaviour
     }
     private void Start()
     {
-        float x = Random.Range(1, 3);//10/15 to start off
+        float x = Random.Range(20, 40);//10/15 to start off
         //Debug.Log(x);
-        StartCoroutine(TakePhoneRoutine(12));
+        goToPlayerRoutine = TakePhoneRoutine(x);
+        StartCoroutine(goToPlayerRoutine);
+
     }
+  
     private void Update()
     {
         checkIfLooking();
+        if (gameover)
+        {
+
+        }
     }
     void checkIfLooking()
     {
@@ -73,23 +87,33 @@ public class NPCBehavior : MonoBehaviour
         yield return new WaitForSeconds(seconds/3);
         Debug.Log("start reaching for phone");
         //start to reach for phone - should take the same amount of time to reach down
-        StartCoroutine(handMoveBehavior(seconds/3));
+        HandRoutine = handMoveBehavior(seconds / 3);
+        StartCoroutine(HandRoutine);
         currentAction = actions.handsy;
-        yield return new WaitForSeconds(seconds/3);
-        //lose game
-        GameManager.instance.GameEnd();
 
+        while(!handTouched)
+        {
+            handTouched = true;
+            triggered();
+            yield break;
+        }
+        yield return new WaitForSeconds(seconds/3);
+        if (gameover && handTouched)
+        {
+            GameManager.instance.GameEnd();
+        }
     }
 
     public void triggered()
     {
         StartCoroutine( moveAway());
+        
     }
 
     IEnumerator moveAway()
     {
-        StopCoroutine(handMoveBehavior(100f));
-        StopCoroutine(TakePhoneRoutine(40));
+        StopCoroutine(goToPlayerRoutine);
+        StopCoroutine(HandRoutine);
         Debug.Log("HandMoveCoroutine Stopped - moveaway triggered - behavior reset");
         StartCoroutine(moveHandBackBehavior(3f));
         handTouched = true;
@@ -124,8 +148,6 @@ public class NPCBehavior : MonoBehaviour
             }
             hand.transform.position = handEndPos.position;
             //Debug.Log("HandMoveComplete");
-        
-        
     }
     IEnumerator moveHandBackBehavior(float t)
     {
