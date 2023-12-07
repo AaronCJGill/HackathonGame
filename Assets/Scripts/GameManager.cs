@@ -40,6 +40,7 @@ public class GameManager : MonoBehaviour
         //Debug.Log(mainXCoordinate);
         //Debug.Log(mainYCoordinate);
     }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.W))
