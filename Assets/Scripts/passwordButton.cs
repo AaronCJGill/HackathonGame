@@ -12,6 +12,8 @@ public class passwordButton : MonoBehaviour
     {
         //go and add this num to the password in
         GameManager.instance.Password += num;
+        //play sound for touch screen -------------------------------------------------------
+        AudioManager.instance.PhoneTouchCode.Play();
         if (GameManager.instance.Password.Length != 4)
         {
             GameManager.instance.passwordListIndex++;

@@ -37,6 +37,8 @@ public class GameManager : MonoBehaviour
     {
         mainXCoordinate = scenesInGame[0].GetComponent<scene>().xCoordinateInitial;
         mainYCoordinate = scenesInGame[0].GetComponent<scene>().yCoordinateInitial;
+        //Debug.Log(mainXCoordinate);
+        //Debug.Log(mainYCoordinate);
     }
     void Update()
     {
@@ -93,7 +95,18 @@ public class GameManager : MonoBehaviour
         //change the pos of the scenes
         scenesInGame[0].transform.position = new Vector2(0, mainYCoordinate - 100);
         currentSeneToChange.transform.position = new Vector2(mainXCoordinate,mainYCoordinate);
+
+        //change the Xpos of the hands
+        npc1HandInitalY = npc1Hand.transform.position.y;
+        npc1Hand.transform.position = new Vector2(0, mainYCoordinate - 100);
+        npc2HandInitalY = npc2Hand.transform.position.y;
+        npc2Hand.transform.position = new Vector2(0, mainYCoordinate - 100);
     }
+
+    public GameObject npc1Hand;
+    public GameObject npc2Hand;
+    float npc1HandInitalY;
+    float npc2HandInitalY;
 
     void getButtonUp(char chr)
     {
@@ -118,6 +131,10 @@ public class GameManager : MonoBehaviour
 
         //reset activeScreen
         activeScreen = NPCBehavior.activeScreen.down;
+
+        //get the hands back!
+        npc1Hand.transform.position = new Vector2(0, npc1HandInitalY);
+        npc2Hand.transform.position = new Vector2(0, npc2HandInitalY);
     }
 
     public GameObject trivia;
@@ -132,7 +149,8 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            //play sound
+            //play wrong password sound -------------------------------------------------------
+            AudioManager.instance.WrongPassword.Play();
         }
         Password = "";
     }
@@ -142,17 +160,29 @@ public class GameManager : MonoBehaviour
     public int totalScore;
 
     public GameObject EndScene;
-    public void GameEnd()
+    public GameObject BadEndScene;
+    public void GameEnd(bool win) // take a string to write according to win or loss
     {
-        //calculate the score
-        totalScore = content.transform.childCount;
-        for (int i = 0; i < totalScore; i++)
+        if (win == true)
         {
-            if (content.transform.GetChild(i).GetComponent<questions>().answerSelected == content.transform.GetChild(i).GetComponent<questions>().correctAnswer)
-                score++;
-        }
+            //calculate the score
+            totalScore = content.transform.childCount;
+            for (int i = 0; i < content.transform.childCount; i++)
+            {
+                Debug.Log(content.transform.GetChild(i).GetComponent<questions>().answerSelected);
+                Debug.Log(content.transform.GetChild(i).GetComponent<questions>().correctAnswer);
+                if (content.transform.GetChild(i).GetComponent<questions>().answerSelected == content.transform.GetChild(i).GetComponent<questions>().correctAnswer)
+                    score++;
+            }
 
-        EndScene.SetActive(true);
-        EndScene.transform.GetChild(1).GetComponent<TMP_Text>().text += score + "/" + totalScore;
+            EndScene.SetActive(true);
+            EndScene.transform.GetChild(1).GetComponent<TMP_Text>().text += score + "/" + totalScore;
+        }
+        else
+        {
+            BadEndScene.SetActive(true);
+        }
+        
+        timer.instance.gameEnded = true;
     }
 }
