@@ -15,12 +15,14 @@ public class NPC_Manager : MonoBehaviour
     float initialHandY;
     public float handIncrement;
     private float potatoModeHandIncrement;
-    int waitTime = 60; //static var, maybe make it an array and put both wait times here?
-    int timeWaited; // incremented var
+    int waitTime = 1; //static var, maybe make it an array and put both wait times here? - represents seconds
+    float timeWaited; // incremented var
     // bool startGettingCloser = false;
     float scale = 1;
     float finalScale;
     int hitCount;
+    [Range(0.1f, 1)] [SerializeField][Tooltip("Divide 2 by this number to get the amount of seconds it will take to finish scaling.")]
+    private float scaleIncrement = 0.5f;
 
     float handIncrementWebGL;//use if have to hard code webgl differences
 
@@ -29,9 +31,6 @@ public class NPC_Manager : MonoBehaviour
 
     void Start()
     {
-        //set handincrement if in webgl
-        handIncrementWebGL = handIncrement * 3;
-        
         //get the initial pos of the hand
         initialHandX = NPC_Hand.transform.position.x;
         initialHandY = NPC_Hand.transform.position.y;
@@ -42,11 +41,14 @@ public class NPC_Manager : MonoBehaviour
         if (isInScreen == false)
             NPC_Face.SetActive(false);
     }
-
+    public bool debugMode = false;
     
     void Update()
     {
-        Debug.Log(state) ;
+        if (debugMode)
+        {
+            Debug.Log(state);
+        }
         switch (state)
         {
             case npcState.offScreen:
@@ -59,16 +61,9 @@ public class NPC_Manager : MonoBehaviour
                 break;
 
             case npcState.wait:
-                if (!GameManager.PotatoMode)
-                {
-                    timeWaited++;
-                }
-                else if (GameManager.PotatoMode)
-                {
-                    timeWaited += 3;//compensate to match, everything is 3 times as fast now
-                }
+                timeWaited += Time.deltaTime;
 
-                if (waitTime == timeWaited)
+                if (waitTime <= timeWaited)
                 {
                     timeWaited = 0;
                     state = npcState.getCloser;
@@ -81,27 +76,12 @@ public class NPC_Manager : MonoBehaviour
                     heavyBreathing.Stop();
                 
                 //determine if potatomode is active first
-                if (!GameManager.PotatoMode)
-                {
-                    //no potato mode
-                    if (phoneScreenButton.instance.phoneOpen == true)
-                        scale += .0005f;
-                    else
-                        scale -= .0005f;
-                }
-                else if(GameManager.PotatoMode)
-                {
-                    //yes potato mode
-                    if (phoneScreenButton.instance.phoneOpen == true)
-                    {
-                        scale += .0005f * 3;
-                        Debug.Log(scale);
-                    }
-                    else
-                    {
-                        scale -= .0005f * 3;
-                    }
-                }
+
+                if (phoneScreenButton.instance.phoneOpen == true)
+                    scale += scaleIncrement * Time.deltaTime;
+                else
+                    scale -= scaleIncrement * Time.deltaTime;
+                
 
                 NPC_Face.transform.localScale = new Vector2(scale,scale);
                 if (scale >= 2)
@@ -121,14 +101,9 @@ public class NPC_Manager : MonoBehaviour
 
             case npcState.handAproaches:
                 //if in potato mode change the value
-                if (GameManager.PotatoMode)
-                {
-                    NPC_Hand.GetComponent<RectTransform>().position += new Vector3(potatoModeHandIncrement, 0, 0);
-                }
-                else if(!GameManager.PotatoMode)
-                {
-                    NPC_Hand.GetComponent<RectTransform>().position += new Vector3(handIncrement, 0, 0);
-                }
+                
+                NPC_Hand.GetComponent<RectTransform>().position += new Vector3(handIncrement * Time.deltaTime, 0, 0);
+                
 
                 if (handIncrement <= 0) // can be deleted perhaps?
                 {
@@ -157,14 +132,7 @@ public class NPC_Manager : MonoBehaviour
                 }
 
                 //if wait time is over, go to handAproaches
-                if (!GameManager.PotatoMode)
-                {
-                    timeWaited++;
-                }
-                else
-                {
-                    timeWaited += 3;
-                }
+                timeWaited += Time.deltaTime;
 
 
                 if (waitTime >= timeWaited)
@@ -180,82 +148,42 @@ public class NPC_Manager : MonoBehaviour
 
             case npcState.handRetreatBack: // hand goes back
                 //wait until the animation is over, animate
-                if (!GameManager.PotatoMode)
+                if (playerHand.GetComponent<RectTransform>().position.y > GameManager.instance.mainYCoordinate - 1)
                 {
-                    if (playerHand.GetComponent<RectTransform>().position.y > GameManager.instance.mainYCoordinate - 1)
-                        playerHand.GetComponent<RectTransform>().position -= new Vector3(0, .05f, 0);
-                    else
-                    {
-                        //close the player hand if still open
-                        if (playerHand.activeSelf)
-                            playerHand.SetActive(false);
-                        //move the  NPC hand back
-                        NPC_Hand.GetComponent<RectTransform>().position += new Vector3(-(handIncrement * 2), 0, 0);
-                        if (handIncrement > 0 && NPC_Hand.GetComponent<RectTransform>().position.x < initialHandX)
-                        {
-                            //stop playing heavy breathing ---------------------------------------------------------------------------------------------
-                            heavyBreathing.Stop();
-                            NPC_Hand.GetComponent<RectTransform>().position += new Vector3(initialHandX, initialHandY, 0);
-                            scale = 1;
-                            NPC_Face.transform.localScale = new Vector2(scale, scale);
-                            timeWaited = 0;
-                            if (hitCount == 2)
-                                state = npcState.deboard;
-                            else
-                                state = npcState.wait; // go back
-                        }
-                        else if (handIncrement < 0 && NPC_Hand.GetComponent<RectTransform>().position.x > initialHandX)
-                        {
-                            //stop playing heavy breathing ---------------------------------------------------------------------------------------------
-                            heavyBreathing.Stop();
-                            NPC_Hand.GetComponent<RectTransform>().position += new Vector3(initialHandX, initialHandY, 0);
-                            scale = 1;
-                            NPC_Face.transform.localScale = new Vector2(scale, scale);
-                            timeWaited = 0;
-                            if (hitCount == 2)
-                                state = npcState.deboard;
-                            else
-                                state = npcState.wait; // go back
-                        }
-                    }
+                    playerHand.GetComponent<RectTransform>().position -= new Vector3(0, 6* Time.deltaTime, 0);
                 }
-                else if(GameManager.PotatoMode)//POTATO MODE - values are multiplied by 3
+                else
                 {
-                    if (playerHand.GetComponent<RectTransform>().position.y > GameManager.instance.mainYCoordinate - 1)
-                        playerHand.GetComponent<RectTransform>().position -= new Vector3(0, .05f * 3, 0);
-                    else
+                    //close the player hand if still open
+                    if (playerHand.activeSelf)
+                        playerHand.SetActive(false);
+                    //move the  NPC hand back
+                    NPC_Hand.GetComponent<RectTransform>().position += new Vector3(-(handIncrement * 2) * Time.deltaTime, 0, 0);
+                    if (handIncrement > 0 && NPC_Hand.GetComponent<RectTransform>().position.x < initialHandX)
                     {
-                        //close the player hand if still open
-                        if (playerHand.activeSelf)
-                            playerHand.SetActive(false);
-                        //move the  NPC hand back
-                        NPC_Hand.GetComponent<RectTransform>().position += new Vector3(-((handIncrement * 2) * 3), 0, 0);
-                        if (handIncrement > 0 && NPC_Hand.GetComponent<RectTransform>().position.x < initialHandX)
-                        {
-                            //stop playing heavy breathing ---------------------------------------------------------------------------------------------
-                            heavyBreathing.Stop();
-                            NPC_Hand.GetComponent<RectTransform>().position += new Vector3(initialHandX, initialHandY, 0);//may need to affect this as well
-                            scale = 1;
-                            NPC_Face.transform.localScale = new Vector2(scale, scale);
-                            timeWaited = 0;
-                            if (hitCount == 2)
-                                state = npcState.deboard;
-                            else
-                                state = npcState.wait; // go back
-                        }
-                        else if (handIncrement < 0 && NPC_Hand.GetComponent<RectTransform>().position.x > initialHandX)
-                        {
-                            //stop playing heavy breathing ---------------------------------------------------------------------------------------------
-                            heavyBreathing.Stop();
-                            NPC_Hand.GetComponent<RectTransform>().position += new Vector3(initialHandX * 3, initialHandY * 3, 0);
-                            scale = 1;
-                            NPC_Face.transform.localScale = new Vector2(scale, scale);
-                            timeWaited = 0;
-                            if (hitCount == 2)
-                                state = npcState.deboard;
-                            else
-                                state = npcState.wait; // go back
-                        }
+                        //stop playing heavy breathing ---------------------------------------------------------------------------------------------
+                        heavyBreathing.Stop();
+                        NPC_Hand.GetComponent<RectTransform>().position += new Vector3(initialHandX * Time.deltaTime, initialHandY * Time.deltaTime, 0);
+                        scale = 1;
+                        NPC_Face.transform.localScale = new Vector2(scale, scale);
+                        timeWaited = 0;
+                        if (hitCount == 2)
+                            state = npcState.deboard;
+                        else
+                            state = npcState.wait; // go back
+                    }
+                    else if (handIncrement < 0 && NPC_Hand.GetComponent<RectTransform>().position.x > initialHandX)
+                    {
+                        //stop playing heavy breathing ---------------------------------------------------------------------------------------------
+                        heavyBreathing.Stop();
+                        NPC_Hand.GetComponent<RectTransform>().position += new Vector3(initialHandX * Time.deltaTime, initialHandY * Time.deltaTime, 0);
+                        scale = 1;
+                        NPC_Face.transform.localScale = new Vector2(scale, scale);
+                        timeWaited = 0;
+                        if (hitCount == 2)
+                            state = npcState.deboard;
+                        else
+                            state = npcState.wait; // go back
                     }
                 }
                 

@@ -9,7 +9,9 @@ public class timer : MonoBehaviour
     public int stops;
     public int timeBetweenStops = 0;
     public int gameTime =  0;
-    public int timeAlarm;
+    public bool which = true; //true = 1, false = 2
+    public float timeAlarm;
+    public float timeAlarm2;
     public bool gameEnded = false;
 
     public List<Sprite> stopImages = new List<Sprite>(); // the count of this obj gives stop num
@@ -34,7 +36,7 @@ public class timer : MonoBehaviour
 
     public void Start()
     {
-        stops = stopImages.Count;
+        stops = stopImages.Count -1;
         if (timeBetweenStops == 0) //according to whichever you set up, will calculate the other
         {
             timeBetweenStops = gameTime / stops;
@@ -51,17 +53,13 @@ public class timer : MonoBehaviour
     {
         if (!gameEnded)
         {
-            if (!GameManager.PotatoMode)
-            {
-                timeAlarm++;
-            }
-            else if (GameManager.PotatoMode)
-            {
-                timeAlarm += 3;
-            }
+            if(which ==true)
+                timeAlarm += Time.deltaTime;
+            else
+                timeAlarm2 += Time.deltaTime;
         }
 
-        if (timeAlarm == timeBetweenStops) // stopping time
+        if (timeAlarm >= timeBetweenStops*Time.deltaTime) // stopping time
         {
             // play sound for deboarding -------------------------------------
             AudioManager.instance.Stop.Play();
@@ -94,9 +92,10 @@ public class timer : MonoBehaviour
                 npc2.GetComponent<NPC_Manager>().isInScreen = false;
                 npc2.GetComponent<NPC_Manager>().state = npcState.offScreen;
             }
-
+            timeAlarm = 0;
+            which = false;
         }
-        else if (timeAlarm == timeBetweenStops + 30) // waiting between stops
+        else if (timeAlarm2 >= Time.deltaTime) // waiting between stops
         {
             // play sound for closing doors -------------------------------------
             AudioManager.instance.Stop.Play();
@@ -117,7 +116,8 @@ public class timer : MonoBehaviour
                 gameEnded = true;
             }
             
-            timeAlarm = 0;
+            timeAlarm2 = 0;
+            which = true;
         }
     }
 }

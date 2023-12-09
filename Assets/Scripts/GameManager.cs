@@ -8,7 +8,7 @@ using System;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    public static bool PotatoMode;
+    public static bool PotatoMode = false;
 
     private void Awake()
     {
@@ -20,8 +20,6 @@ public class GameManager : MonoBehaviour
         {
             instance = this;
         }
-        PotatoMode = PotatoModeHandler.instance.potatomode;
-        Debug.Log(PotatoMode);
         //this is spawned in on the loading of the subway scene instead of at start.
         //So on awake we have to get the potatoMode definition from the potatoMode handler which has dontDestroyOnLoad
         

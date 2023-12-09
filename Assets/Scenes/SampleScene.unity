@@ -748,8 +748,10 @@ MonoBehaviour:
   NPC: {fileID: 608515834}
   NPC_Face: {fileID: 160557994}
   NPC_Hand: {fileID: 982078449}
-  handIncrement: 0.005
+  handIncrement: 0.5
+  scaleIncrement: 0.15
   heavyBreathing: {fileID: 857817291}
+  debugMode: 1
   playerHand: {fileID: 360852197}
 --- !u!1 &147157486
 GameObject:
@@ -3046,7 +3048,7 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 6
+  m_ScrollSensitivity: 20
   m_Viewport: {fileID: 2068954410}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 0}
@@ -3472,8 +3474,10 @@ MonoBehaviour:
   NPC: {fileID: 1145858147}
   NPC_Face: {fileID: 34631011}
   NPC_Hand: {fileID: 1867156656}
-  handIncrement: -0.005
+  handIncrement: -0.5
+  scaleIncrement: 0.15
   heavyBreathing: {fileID: 1174219129}
+  debugMode: 0
   playerHand: {fileID: 1930903005}
 --- !u!1 &737203285
 GameObject:
@@ -10091,7 +10095,9 @@ MonoBehaviour:
   stops: 0
   timeBetweenStops: 3000
   gameTime: 0
+  which: 0
   timeAlarm: 0
+  timeAlarm2: 0
   gameEnded: 0
   stopImages:
   - {fileID: 21300000, guid: 6304be9239bad4f03b04486046b8729b, type: 3}
