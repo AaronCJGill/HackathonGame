@@ -50,7 +50,17 @@ public class timer : MonoBehaviour
     public void Update()
     {
         if (!gameEnded)
-            timeAlarm++;
+        {
+            if (!GameManager.PotatoMode)
+            {
+                timeAlarm++;
+            }
+            else if (GameManager.PotatoMode)
+            {
+                timeAlarm += 3;
+            }
+        }
+
         if (timeAlarm == timeBetweenStops) // stopping time
         {
             // play sound for deboarding -------------------------------------
