@@ -1684,7 +1684,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -540}
+  m_AnchoredPosition: {x: 0, y: -510}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &360852197
@@ -5639,7 +5639,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -540}
+  m_AnchoredPosition: {x: 0, y: -504}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1101068125
@@ -6262,7 +6262,7 @@ PrefabInstance:
       objectReference: {fileID: -2067461459365130064, guid: fbc5f06c19f9e41ca9b9167736259c89, type: 2}
     - target: {fileID: 4292204813466233328, guid: 6dc909aebc0724b2f803e9c76608c079, type: 3}
       propertyPath: question
-      value: 'olve for x: 2x + 5 = 15. '
+      value: 'Solve for x: 2x + 5 = 15. '
       objectReference: {fileID: 0}
     - target: {fileID: 4292204813466233328, guid: 6dc909aebc0724b2f803e9c76608c079, type: 3}
       propertyPath: questionNum
@@ -7074,7 +7074,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4292204813466233328, guid: 6dc909aebc0724b2f803e9c76608c079, type: 3}
       propertyPath: answerStrings.Array.data[1]
-      value: South Africe
+      value: South Africa
       objectReference: {fileID: 0}
     - target: {fileID: 4292204813466233328, guid: 6dc909aebc0724b2f803e9c76608c079, type: 3}
       propertyPath: answerStrings.Array.data[2]
@@ -10093,7 +10093,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentStop: 0
   stops: 0
-  timeBetweenStops: 3000
+  timeBetweenStops: 25
   gameTime: 0
   which: 0
   timeAlarm: 0

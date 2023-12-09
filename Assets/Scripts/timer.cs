@@ -59,7 +59,7 @@ public class timer : MonoBehaviour
                 timeAlarm2 += Time.deltaTime;
         }
 
-        if (timeAlarm >= timeBetweenStops*Time.deltaTime) // stopping time
+        if (timeAlarm >= timeBetweenStops) // stopping time
         {
             // play sound for deboarding -------------------------------------
             AudioManager.instance.Stop.Play();

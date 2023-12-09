@@ -26,7 +26,7 @@ public class PotatoModeHandler : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         if (Application.platform == RuntimePlatform.WebGLPlayer)
         {
-            togglePanel.SetActive(true);
+            //togglePanel.SetActive(true);
         }
     }
 
