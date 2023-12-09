@@ -190,4 +190,8 @@ public class GameManager : MonoBehaviour
         
         timer.instance.gameEnded = true;
     }
+
+    
+
+
 }
