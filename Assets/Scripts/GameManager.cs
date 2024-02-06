@@ -166,8 +166,24 @@ public class GameManager : MonoBehaviour
 
     public GameObject EndScene;
     public GameObject BadEndScene;
+
+    public GameObject npc1;
+    public GameObject npc2;
+
     public void GameEnd(bool win) // take a string to write according to win or loss
     {
+
+        // stop all the sounds and objs
+        npc1.SetActive(false);
+        npc2.SetActive(false);
+        AudioManager.instance.Ambiance.Stop();
+        AudioManager.instance.HeavyBreathing.Stop();
+        AudioManager.instance.PhoneOff.Stop();
+        AudioManager.instance.WrongPassword.Stop();
+        AudioManager.instance.PhoneTouchCode.Stop();
+        AudioManager.instance.Stop.Stop();
+        AudioManager.instance.Slap.Stop();
+
         if (win == true)
         {
             //calculate the score

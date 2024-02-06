@@ -7679,6 +7679,8 @@ MonoBehaviour:
   totalScore: 0
   EndScene: {fileID: 1096213746}
   BadEndScene: {fileID: 330103195}
+  npc1: {fileID: 139494517}
+  npc2: {fileID: 676312627}
 --- !u!4 &1432616327
 Transform:
   m_ObjectHideFlags: 0
