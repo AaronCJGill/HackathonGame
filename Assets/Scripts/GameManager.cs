@@ -8,6 +8,7 @@ using System;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+    public static bool PotatoMode = false;
 
     private void Awake()
     {
@@ -19,6 +20,9 @@ public class GameManager : MonoBehaviour
         {
             instance = this;
         }
+        //this is spawned in on the loading of the subway scene instead of at start.
+        //So on awake we have to get the potatoMode definition from the potatoMode handler which has dontDestroyOnLoad
+        
     }
 
     public List<GameObject> scenesInGame = new List<GameObject>();
@@ -37,7 +41,10 @@ public class GameManager : MonoBehaviour
     {
         mainXCoordinate = scenesInGame[0].GetComponent<scene>().xCoordinateInitial;
         mainYCoordinate = scenesInGame[0].GetComponent<scene>().yCoordinateInitial;
+        //Debug.Log(mainXCoordinate);
+        //Debug.Log(mainYCoordinate);
     }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.W))
@@ -93,7 +100,18 @@ public class GameManager : MonoBehaviour
         //change the pos of the scenes
         scenesInGame[0].transform.position = new Vector2(0, mainYCoordinate - 100);
         currentSeneToChange.transform.position = new Vector2(mainXCoordinate,mainYCoordinate);
+
+        //change the Xpos of the hands
+        npc1HandInitalY = npc1Hand.transform.position.y;
+        npc1Hand.transform.position = new Vector2(0, mainYCoordinate - 100);
+        npc2HandInitalY = npc2Hand.transform.position.y;
+        npc2Hand.transform.position = new Vector2(0, mainYCoordinate - 100);
     }
+
+    public GameObject npc1Hand;
+    public GameObject npc2Hand;
+    float npc1HandInitalY;
+    float npc2HandInitalY;
 
     void getButtonUp(char chr)
     {
@@ -118,6 +136,10 @@ public class GameManager : MonoBehaviour
 
         //reset activeScreen
         activeScreen = NPCBehavior.activeScreen.down;
+
+        //get the hands back!
+        npc1Hand.transform.position = new Vector2(0, npc1HandInitalY);
+        npc2Hand.transform.position = new Vector2(0, npc2HandInitalY);
     }
 
     public GameObject trivia;
@@ -132,7 +154,8 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            //play sound
+            //play wrong password sound -------------------------------------------------------
+            AudioManager.instance.WrongPassword.Play();
         }
         Password = "";
     }
@@ -142,17 +165,49 @@ public class GameManager : MonoBehaviour
     public int totalScore;
 
     public GameObject EndScene;
-    public void GameEnd()
-    {
-        //calculate the score
-        totalScore = content.transform.childCount;
-        for (int i = 0; i < totalScore; i++)
-        {
-            if (content.transform.GetChild(i).GetComponent<questions>().answerSelected == content.transform.GetChild(i).GetComponent<questions>().correctAnswer)
-                score++;
-        }
+    public GameObject BadEndScene;
 
-        EndScene.SetActive(true);
-        EndScene.transform.GetChild(1).GetComponent<TMP_Text>().text += score + "/" + totalScore;
+    public GameObject npc1;
+    public GameObject npc2;
+
+    public void GameEnd(bool win) // take a string to write according to win or loss
+    {
+
+        // stop all the sounds and objs
+        npc1.SetActive(false);
+        npc2.SetActive(false);
+        AudioManager.instance.Ambiance.Stop();
+        AudioManager.instance.HeavyBreathing.Stop();
+        AudioManager.instance.PhoneOff.Stop();
+        AudioManager.instance.WrongPassword.Stop();
+        AudioManager.instance.PhoneTouchCode.Stop();
+        AudioManager.instance.Stop.Stop();
+        AudioManager.instance.Slap.Stop();
+
+        if (win == true)
+        {
+            //calculate the score
+            totalScore = content.transform.childCount;
+            for (int i = 0; i < content.transform.childCount; i++)
+            {
+                Debug.Log(content.transform.GetChild(i).GetComponent<questions>().answerSelected);
+                Debug.Log(content.transform.GetChild(i).GetComponent<questions>().correctAnswer);
+                if (content.transform.GetChild(i).GetComponent<questions>().answerSelected == content.transform.GetChild(i).GetComponent<questions>().correctAnswer)
+                    score++;
+            }
+
+            EndScene.SetActive(true);
+            EndScene.transform.GetChild(1).GetComponent<TMP_Text>().text += score + "/" + totalScore;
+        }
+        else
+        {
+            BadEndScene.SetActive(true);
+        }
+        
+        timer.instance.gameEnded = true;
     }
+
+    
+
+
 }
