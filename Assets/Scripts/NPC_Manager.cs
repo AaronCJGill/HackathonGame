@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum npcState { offScreen, wait, getCloser, handAproaches, pause, deboard, handRetreatBack }
 public class NPC_Manager : MonoBehaviour
@@ -29,6 +30,12 @@ public class NPC_Manager : MonoBehaviour
     //heavy breathing sound
     public AudioSource heavyBreathing;
 
+    // ---- UI CHANGES
+    public GameObject LookUI;
+    public Sprite lookHit;
+    public Sprite lookDown;
+    // ----
+
     void Start()
     {
         //get the initial pos of the hand
@@ -44,7 +51,7 @@ public class NPC_Manager : MonoBehaviour
     public bool debugMode = false;
     
     void Update()
-    {
+    {   
         if (debugMode)
         {
             Debug.Log(state);
@@ -76,13 +83,11 @@ public class NPC_Manager : MonoBehaviour
                     heavyBreathing.Stop();
                 
                 //determine if potatomode is active first
-
                 if (phoneScreenButton.instance.phoneOpen == true)
                     scale += scaleIncrement * Time.deltaTime;
                 else
                     scale -= scaleIncrement * Time.deltaTime;
                 
-
                 NPC_Face.transform.localScale = new Vector2(scale,scale);
                 if (scale >= 2)
                 {
@@ -101,10 +106,8 @@ public class NPC_Manager : MonoBehaviour
 
             case npcState.handAproaches:
                 //if in potato mode change the value
-                
                 NPC_Hand.GetComponent<RectTransform>().position += new Vector3(handIncrement * Time.deltaTime, 0, 0);
                 
-
                 if (handIncrement <= 0) // can be deleted perhaps?
                 {
                     NPC_Hand.transform.GetChild(0).GetComponent<RectTransform>().position = NPC_Hand.GetComponent<RectTransform>().position;
@@ -124,6 +127,7 @@ public class NPC_Manager : MonoBehaviour
                     state = npcState.deboard;
                 }
                 break;
+
             case npcState.pause:
                 if (phoneScreenButton.instance.phoneOpen == false)
                 {
@@ -133,7 +137,6 @@ public class NPC_Manager : MonoBehaviour
 
                 //if wait time is over, go to handAproaches
                 timeWaited += Time.deltaTime;
-
 
                 if (waitTime >= timeWaited)
                 {
@@ -156,13 +159,23 @@ public class NPC_Manager : MonoBehaviour
                 {
                     //close the player hand if still open
                     if (playerHand.activeSelf)
+                    {
                         playerHand.SetActive(false);
+                    }
+                        
                     //move the  NPC hand back
                     NPC_Hand.GetComponent<RectTransform>().position += new Vector3(-(handIncrement * 2) * Time.deltaTime, 0, 0);
+
+                    
                     if (handIncrement > 0 && NPC_Hand.GetComponent<RectTransform>().position.x < initialHandX)
                     {
-                        //stop playing heavy breathing ---------------------------------------------------------------------------------------------
+                        // ---- UI CHANGES
+                        LookUI.GetComponent<Image>().sprite = lookDown;
+                        // ----
+
+                        //stop playing heavy breathing 
                         heavyBreathing.Stop();
+                        //move
                         NPC_Hand.GetComponent<RectTransform>().position += new Vector3(initialHandX * Time.deltaTime, initialHandY * Time.deltaTime, 0);
                         scale = 1;
                         NPC_Face.transform.localScale = new Vector2(scale, scale);
@@ -174,8 +187,13 @@ public class NPC_Manager : MonoBehaviour
                     }
                     else if (handIncrement < 0 && NPC_Hand.GetComponent<RectTransform>().position.x > initialHandX)
                     {
-                        //stop playing heavy breathing ---------------------------------------------------------------------------------------------
+                        // ---- UI CHANGES
+                        LookUI.GetComponent<Image>().sprite = lookDown;
+                        // ----
+
+                        //stop playing heavy breathing
                         heavyBreathing.Stop();
+                        //move
                         NPC_Hand.GetComponent<RectTransform>().position += new Vector3(initialHandX * Time.deltaTime, initialHandY * Time.deltaTime, 0);
                         scale = 1;
                         NPC_Face.transform.localScale = new Vector2(scale, scale);
@@ -192,8 +210,13 @@ public class NPC_Manager : MonoBehaviour
     }
 
     public GameObject playerHand;
+
     public void HandHit() // buttonClick
     {
+        // ---- UI CHANGES
+        LookUI.GetComponent<Image>().sprite = lookHit;
+        // ----
+
         hitCount++;
         playerHand.SetActive(true);
         //playerHand.GetComponent<RectTransform>().position = new Vector3(0, NPC_Hand.GetComponent<RectTransform>().position.y + 150, 0);
