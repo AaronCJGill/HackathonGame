@@ -37,6 +37,8 @@ public class GameManager : MonoBehaviour
     public List<Sprite> passwordSprites = new List<Sprite>();
     public int passwordListIndex;
 
+    public TMP_Text scoreText;
+
     void Start()
     {
         mainXCoordinate = scenesInGame[0].GetComponent<scene>().xCoordinateInitial;
@@ -197,7 +199,8 @@ public class GameManager : MonoBehaviour
             }
 
             EndScene.SetActive(true);
-            EndScene.transform.GetChild(1).GetComponent<TMP_Text>().text += score + "/" + totalScore;
+            scoreText.text += score + "/" + totalScore;
+            //EndScene.transform.GetChild(1).GetComponent<TMP_Text>().text += score + "/" + totalScore;
         }
         else
         {
