@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        questionrandomizer.instance.CreateTest();
         mainXCoordinate = scenesInGame[0].GetComponent<scene>().xCoordinateInitial;
         mainYCoordinate = scenesInGame[0].GetComponent<scene>().yCoordinateInitial;
         //Debug.Log(mainXCoordinate);
@@ -161,6 +162,7 @@ public class GameManager : MonoBehaviour
         }
         Password = "";
     }
+    public bool phoneLocked => opneScreen.activeSelf;
 
     public GameObject content;
     public int score;

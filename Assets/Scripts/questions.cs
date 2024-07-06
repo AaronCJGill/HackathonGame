@@ -18,6 +18,8 @@ public class questions : MonoBehaviour
     public void Start()
     {
         // put all the elements into the object
+        self = gameObject;
+
         self.transform.GetChild(0).GetComponent<TMP_Text>().text = questionNum + ") " + question;
         for (int i = 0; i < answerStrings.Count; i++)
         {
